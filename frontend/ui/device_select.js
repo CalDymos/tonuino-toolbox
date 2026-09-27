@@ -41,6 +41,14 @@ let device_select = {
 
         worker_api.command('list_devices', {
             success: async (devices) => {
+                if(!Array.isArray(devices)) {
+                    msg.info('Laufwerke konnten nicht gelesen werden: ' + (devices.error || 'Unbekannter Fehler'));
+                    if(options.callback) {
+                        options.callback([]);
+                    }
+                    device_select.$devices_refresh_icon.removeClass('fa-spin');
+                    return;
+                }
 
                 await helper.asyncForEach(devices, async (device) => {
 
